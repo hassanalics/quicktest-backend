@@ -3,4 +3,6 @@ module.exports = app => {
 
     // Retrieve all products
     app.get("/products", products.findAll);
+
+    app.get("/products/:id", products.findOne);
 };
