@@ -83,7 +83,27 @@ exports.create = (req, res) => {
 
 // Update a product by the id in the request
 exports.update = (req, res) => {
-  
+    if (!req.body) {
+        return res.status(400).send({
+          message: "Data to update can not be empty!"
+        });
+      }
+    
+      const id = req.params.id;
+    
+      Product.findOneAndUpdate({id: id}, req.body)
+        .then(data => {
+          if (!data) {
+            res.status(404).send({
+              message: `Cannot update Product with id=${id}. Maybe Product was not found!`
+            });
+          } else res.send({ message: "Product was updated successfully." });
+        })
+        .catch(err => {
+          res.status(500).send({
+            message: "Error updating Product with id=" + id
+          });
+        });
 };
 
 // Delete a product with the specified id in the request
