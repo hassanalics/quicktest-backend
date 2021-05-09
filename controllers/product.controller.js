@@ -1,3 +1,4 @@
+var uuid = require('uuid');
 const db = require("../models");
 const Product = db.products;
 
@@ -38,7 +39,6 @@ exports.findByName = (req, res) => {
     const condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
     Product.find(condition, 'id image name price', {skip: 0, limit: 12})
         .then(data => {
-            console.log('******** hello ********', name);
             res.send(data);
         })
     .catch(err => {
@@ -47,4 +47,46 @@ exports.findByName = (req, res) => {
             err.message || "Some error occurred while retrieving products."
         });
     });
+};
+
+// Create and Save a new product
+exports.create = (req, res) => {
+  // Validate request
+  if (!req.body.name) {
+    res.status(400).send({ message: "Name can not be empty!" });
+    return;
+  }
+
+  const product = new Product({
+    id: uuid.v4(),
+    name: req.body.name,
+    image: req.body.image,
+    link: req.body.link,
+    price: req.body.price,
+    currency: req.body.currency,
+    description: req.body.description,
+  });
+
+  // Save product in the database
+  product
+    .save(product)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the product."
+      });
+    });
+};
+
+// Update a product by the id in the request
+exports.update = (req, res) => {
+  
+};
+
+// Delete a product with the specified id in the request
+exports.delete = (req, res) => {
+  
 };
