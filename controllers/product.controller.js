@@ -91,8 +91,19 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
+    const product = {
+        _id: req.body._id,
+        id: req.body.id,
+        name: req.body.name,
+        image: req.body.image,
+        link: req.body.link,
+        price: req.body.price,
+        currency: req.body.currency,
+        description: req.body.description,
+    };
     //   flag useFindAndModify to remove deperecation warning
-    Product.findOneAndUpdate({ id: id }, req.body, { useFindAndModify: false })
+    // Product.findOneAndUpdate({ id: id }, product, { useFindAndModify: false })
+    Product.replaceOne({id: id}, req.body)
         .then(data => {
             if (!data) {
                 res.status(404).send({
@@ -101,6 +112,7 @@ exports.update = (req, res) => {
             } else res.send({ message: "Product was updated successfully." });
         })
         .catch(err => {
+            console.log('err *********', err)
             res.status(500).send({
                 message: "Error updating Product with id=" + id
             });

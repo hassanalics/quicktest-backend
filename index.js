@@ -32,6 +32,7 @@ db.mongoose
 const PORT = process.env.PORT || 3000;
 
 require("./routes/product.routes")(app);
+require("./routes/auth.routes")(app);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
