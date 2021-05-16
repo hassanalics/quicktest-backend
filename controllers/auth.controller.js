@@ -21,15 +21,18 @@ exports.login = (req, res) => {
 
         const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
                 algorithm: 'RS256',
-                expiresIn: 120,
+                expiresIn: new Date().getTime(),
                 subject: userId
             })
 
           // send the JWT back to the user
           // TODO - multiple options available   
-          res.send({
-              bearerToken: jwtBearerToken
-          })                           
+          // set it in the HTTP Response body
+        //   res.cookie("SESSIONID", jwtBearerToken, {httpOnly:true});
+        res.status(200).json({
+            idToken: jwtBearerToken, 
+            expiresIn: new Date().getTime()
+        });
     }
     else {
         // send status 401 Unauthorized
